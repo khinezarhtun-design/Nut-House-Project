@@ -2,19 +2,19 @@ name: .NET CI/CD Production Deployment Pipeline
 
 on:
   push:
-    branches:
-      - main
+    branches
+      - main # Trigger the workflow everytime you push to the main branch
 
 jobs:
-  deploy:
-    runs-on: ubuntu-latest
+  deploy: 
+    runs-on: ubuntu-latest # Use a Github-hosted runner
     steps:
       - name: Execute script on remote server
-        uses: appleboy/ssh-action@v1.0.3
+      # Excute the server's bash script remotely using the workflow
+        uses: appleboy/ssh-action@v1.0.3 # use ssh actions to excute
         with:
-          host: ${{ secrets.SERVER_IP }}
+          host: ${{ secrets.SERVER_IP }} # the host server's public ip address
           username: ubuntu
-          password: ${{ secrets.PASSWORD }}
+          password: ${{ secrets.PASSWORD }} # password of the server
           script: |
-            chmod +x /home/ubuntu/Deployment/deploy-app-package.sh
             /home/ubuntu/Deployment/deploy-app-package.sh
