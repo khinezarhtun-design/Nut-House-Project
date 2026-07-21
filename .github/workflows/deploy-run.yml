@@ -1,0 +1,27 @@
+name: .NET CI/CD Production Deployment Pipeline
+
+on:
+  push:
+    branches:
+      - main # Triggers pipeline automatically whenever changes are pushed to the main branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest # Uses GitHub's hosted Ubuntu runner environment
+
+    steps:
+      - name: Install sshpass
+        # Installs sshpass utility to allow non-interactive SSH authentication using a password
+        run: |
+          echo "Installing sshpass utility on runner..."
+          sudo apt-get update && sudo apt-get install -y sshpass
+          echo "sshpass installation complete."
+
+      - name: Execute script on remote server via SSH
+        # Authenticates with the remote server using sshpass and runs the deployment shell script
+        env:
+          SSHPASS: ${{ secrets.PASSWORD }}
+        run: |
+          echo "Initiating SSH connection to remote server..."
+          sshpass -e ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.SERVER_IP }} "chmod +x /home/ubuntu/Deployment/deploy-app-package.sh && /home/ubuntu/Deployment/deploy-app-package.sh"
+          echo "Remote deployment script execution finished."
