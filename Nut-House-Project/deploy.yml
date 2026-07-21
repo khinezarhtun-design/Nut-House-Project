@@ -1,0 +1,18 @@
+name: .NET CI/CD Production Deployment Pipeline
+
+on:
+push:
+- main
+jobs:
+deploy:
+runs-on: ubuntu-latest
+steps:
+- name: Excute script on remote server
+  uses: appleboy/ssh-action@v1.0.3
+  with:
+    host: ${{ secrets.SERVER_IP}}
+    username: ubuntu
+    password: ${{ secrets.PASSWORD}}
+    script: |
+      chmod +x /home/ubuntu/Deployment/deploy-app-package.sh
+      /home/ubuntu/Deployment/deploy-app-package.sh
